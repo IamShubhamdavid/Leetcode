@@ -19,7 +19,7 @@ const InitalizeConnection = async()=>{
         await Promise.all([main(),redisClient.connect()]);
         console.log("DB Connected");
 
-        app.listen(process.env.Port,()=>{
+        app.listen(process.env.PORT,()=>{
             console.log("Server listening at port number:"+process.env.PORT);
         })
 
@@ -30,12 +30,12 @@ const InitalizeConnection = async()=>{
 }
 
 
-main()
-.then(async()=>{
-    app.listen(process.env.PORT,()=>{
-    console.log("Server listening at port number: "+ process.env.PORT);
-    })
-})
-.catch(err=> console.log("Error Occured: "+err));
+// main()
+// .then(async()=>{
+//     app.listen(process.env.PORT,()=>{
+//     console.log("Server listening at port number: "+ process.env.PORT);
+//     })
+// })
+// .catch(err=> console.log("Error Occured: "+err));
 
 InitalizeConnection();

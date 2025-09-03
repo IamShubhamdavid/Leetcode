@@ -37,7 +37,7 @@ const login=async(req,res)=>{
             throw new Error("INvalid Credentials");
 
         const user=await User.findOne({emailId});
-        const match= bcrypt.compare(password,user.password); 
+        const match= await bcrypt.compare(password,user.password); 
         if(!match)
             throw new Error("Inval;id Crendentials");
 
@@ -81,12 +81,12 @@ const adminRegister = async(req,res)=>{
         const {firstName,emailId,password} = req.body;
 
         req.body.password= await bcrypt.hash(password,10);
-        req.body.role='admin'
+        // req.body.role='admin'
 
 
         const user = await User.create(req.body);
-
-        const token = jwt.sign({_id:user._id,emailId:emailId, role:'admin'},process.env.JWT_KEY,{expiresIn: 60*60});
+        // role:'admin'
+        const token = jwt.sign({_id:user._id,emailId:emailId, role:user.role},process.env.JWT_KEY,{expiresIn: 60*60});
         res.cookie("token",token,{maxAge:60*60*1000});
         res.status(201).send("User registered Successfully");
 
