@@ -1,4 +1,4 @@
-const {getLanguageById,submitBatch,submitToken}=require("../utils/problemUtility");
+const {getLanguageById, submitBatch,submitToken}=require("../utils/problemUtility");
 const Problem = require("../models/problem");
 
 
@@ -61,7 +61,7 @@ const updateProblem = async(req,res)=>{
 
     try{
         if(!id){
-            res.status(400).send("Misiing Id Field");
+            return res.status(400).send("Misiing Id Field");
         }
 
         const DsaProblem = await Problem.findById(id);
@@ -138,7 +138,7 @@ const getProblemById = async(req,res)=>{
         if(!id)
             return res.status(400).send("ID is Misiing");
 
-        const getProblem = await Problem.findById(id);
+        const getProblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution ');
 
         if(!getProblem)
             return res.status(404).send("Problem is missing");
@@ -163,7 +163,7 @@ const getAllProblem = async(req,res)=>{
     // await Problem.find({difficulty:'easy})
     const {id} = req.params;
     try{
-        const getProblem = await Problem.find({});
+        const getProblem = await Problem.find({}).select('_id title difficulty tags');
 
         if(getProblem.length==0)
             return res.status(404).send("Problem is missing");
