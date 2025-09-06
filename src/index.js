@@ -7,6 +7,7 @@ const authRouter = require("./routes/userAuth");
 const redisClient = require('./config/redis');
 const problemRouter = require("./routes/problemCreator");
 //const createProblem = require("../controllers/userProblem")
+const submitRouter = require("./routes/submit");
 
 
 // ye json format  mein aata hai  isliye hmlog express use krte h
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 app.use('/user',authRouter);
 app.use('/problem',problemRouter);
+app.use('/submission', submitRouter);
 
 const InitalizeConnection = async()=>{
     try{

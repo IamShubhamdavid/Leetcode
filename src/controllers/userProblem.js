@@ -1,5 +1,6 @@
 const {getLanguageById, submitBatch,submitToken}=require("../utils/problemUtility");
 const Problem = require("../models/problem");
+const User = require("../models/user");
 
 
 const createProblem= async(req,res)=>{
@@ -176,9 +177,24 @@ const getAllProblem = async(req,res)=>{
     }
 }
 
+const solvedAllProblembyUser = async(req,res)=>{
+    try{
+        //const count = req.result.problemSolved.length;
+        const userId = req.result._id;
+        const user = await User.findById(userId).populate({
+            select:"_id title difficulty tags "
+        });
+
+        res.status(200).send(user.problemSolved);
+    }
+    catch(err){
+        res.status(500).send("Server error: "+err);
+    }
+}
 
 
-module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem};
+
+module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser};
 
 // const submissions=[
 //     {

@@ -19,7 +19,7 @@ const submitBatch= async (submissions)=>{
     base64_encoded: 'false'
   },
   headers: {
-    'x-rapidapi-key': '181634e332msh9808d00dbea848dp1d2b58jsna08fce28294f',
+    'x-rapidapi-key': process.env.JUDGE0_KEY,
     'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
     'Content-Type': 'application/json'
   },
@@ -40,7 +40,7 @@ return await fetchData();
 
 }
 
-const waiting = async (timer)=>{
+const waiting = async(timer)=>{
   setTimeout(()=>{
     return 1;
   },timer);

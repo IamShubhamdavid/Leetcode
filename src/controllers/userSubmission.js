@@ -1,5 +1,6 @@
 const Problem = require("../models/problem");
 const Submission= require("../models/submission");
+const User = require("../models/user");
 const {getLanguageById,submitBatch,submitToken} = require("../utils/problemUtility");
 
 const submitCode = async (req,res)=>{
@@ -22,7 +23,7 @@ const submitCode = async (req,res)=>{
             problemId,
             code,
             language,
-            testCasesPassed:0,
+            //testCasesPassed:0,
             status:'pending',
             testCasesTotal: problem.hiddenTestCases.length
         })
@@ -32,7 +33,7 @@ const submitCode = async (req,res)=>{
         const languageId= getLanguageById(language);
             // I am creating Batch submission
             const submissions= problem.hiddenTestCases.map((testcase)=>({
-                source_code:completeCode,
+                source_code:code,
                 language_id: languageId,
                 stdin: testcase.input,
                 expected_output: testcase.output
@@ -53,7 +54,7 @@ const submitCode = async (req,res)=>{
 
             for(const test of testResult){
                 if(test.status_id==3){
-                    testCasesPasses++;
+                    testCasesPassed++;
                     runtime = runtime+parseFloat(test.time);
                     memory = Math.max(memory,test.memory);
                 }
@@ -77,6 +78,15 @@ const submitCode = async (req,res)=>{
 
             await submittedResult.save();
 
+            // Problem Id ko insert krenge userSchema mein 
+            // ki problemSolved mein if it is not present there.
+
+            // req.result mein user ka information h
+            if(!req.result.problemSolved.includes(problemId)){
+                req.result.problemSolved.push(problemId);
+                await req.result.save();
+            }
+
             res.status(201).send(submittedResult);
 
     }
@@ -86,4 +96,45 @@ const submitCode = async (req,res)=>{
 
 }
 
-module.exports = submitCode;
+const runCode = async(req,res)=>{
+
+    try{
+        const userId = req.result._id;
+        const problemId = req.params.id;
+
+        const {code,language} = req.body;
+
+        if(!userId || !code || !problemId || !language)
+            return res.status(400).send("Some field is missing");
+
+        // Fetch the problem from database
+        const problem = await Problem.findById(problemId);
+        // testCases (Hidden)
+
+        // Judge0 code ko submit karna hai
+
+        const languageId= getLanguageById(language);
+    
+            const submissions= problem.visibleTestCases.map((testcase)=>({
+                source_code:code,
+                language_id: languageId,
+                stdin: testcase.input,
+                expected_output: testcase.output
+
+            }));
+
+            const submitResult= await submitBatch(submissions);
+            const resultToken= submitResult.map((value)=>value.token);
+
+            const testResult = await submitToken(resultToken);
+
+            res.status(201).send(testResult);
+
+    }
+    catch(err){
+        res.status(500).send("Internal error: "+err);
+    }
+}
+
+
+module.exports = {submitCode,runCode};
