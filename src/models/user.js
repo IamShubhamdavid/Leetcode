@@ -47,6 +47,13 @@ const userSchema=new Schema({
     timestamps:true
 });
 
+// pre ka mtlb pehle chlega isliye yaha pr usko use nhi kiye h
+userSchema.post('findOneAndDelete', async function (doc){
+    if(userInfo){
+        await mongoose.model('submission').deleteMany({userId: userInfo._id});
+    }
+});
+
 const User=mongoose.model("user",userSchema);
 
 module.exports= User;

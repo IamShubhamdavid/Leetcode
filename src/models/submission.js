@@ -51,6 +51,12 @@ const submissionSchema = new Schema({
   timestamps: true
 });
 
+submissionSchema.index({userId:1 , problemId:1});
+
+// duplicate mein bhi hmlog indexing deta hai 
+// Hmlog check kreneg ki kon sa query jyda chla rhe h tab uske upar hmlog indexing laga skte h
+// har field mein indexing nhi dena chahiye 
+
 const Submission = mongoose.model('submission',submissionSchema);
 
 module.exports = Submission;

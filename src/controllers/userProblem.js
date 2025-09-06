@@ -192,9 +192,26 @@ const solvedAllProblembyUser = async(req,res)=>{
     }
 }
 
+const submittedProblem = async(req,res)=>{
+    try{
+        const userId= req.result._id;
+        const problemById=req.params.pid;
+        const ans= await Submission.find({userId,problemId});
+
+        if(ans.length==0)
+            res.status(200).send("No Submission is present");
+
+        res.status(200).send(ans);
+
+    }
+    catch(err){
+        res.status(500).send("Internal Error:");
+    }
+}
 
 
-module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser};
+
+module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser,submittedProblem};
 
 // const submissions=[
 //     {
