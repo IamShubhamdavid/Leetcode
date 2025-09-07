@@ -17,6 +17,7 @@ function Signup() {
     console.log(data);
 
     // Backend data ko send kar dena chaiye?
+    
   };
 
   return (
