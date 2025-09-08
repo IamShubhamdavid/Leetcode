@@ -10,12 +10,14 @@ authRouter.post('/register',register);
 authRouter.post('/login',login);
 authRouter.post('/logout', userMiddleware,logout);
 authRouter.post('/admin/register',adminMiddleware, adminRegister);
-authRouter.delete('/profile', userMiddleware, deleteProfile);
+authRouter.delete('/deleteprofile', userMiddleware, deleteProfile);
 authRouter.get('/check',userMiddleware,(req,res)=>{
+
     const reply = {
         firstName: req.result.firstName,
         emailId: req.result.emailId,
-        _id: result._id
+        _id: result._id,
+        role:req.result.role,
     }
     res.status(200).json({
         user:reply,
