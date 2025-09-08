@@ -8,6 +8,12 @@ const redisClient = require('./config/redis');
 const problemRouter = require("./routes/problemCreator");
 //const createProblem = require("../controllers/userProblem")
 const submitRouter = require("./routes/submit");
+const cors = require('cors');
+
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials: true
+}))
 
 
 // ye json format  mein aata hai  isliye hmlog express use krte h

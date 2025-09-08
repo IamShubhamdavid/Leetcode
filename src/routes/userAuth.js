@@ -1,7 +1,7 @@
 const express=require('express');
 
 const authRouter=express.Router();
-const {register,login,logout, adminRegister} = require('../controllers/userAuthent');
+const {register,login,logout, adminRegister, deleteProfile} = require('../controllers/userAuthent');
 const userMiddleware = require("../middleware/userMiddleware");
 const adminMiddleware=require('../middleware/adminMiddleware');
 

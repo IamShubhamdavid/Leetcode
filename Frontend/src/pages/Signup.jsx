@@ -3,6 +3,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import {registerUser} from '../authSlice'
+import { useEffect } from 'react';
 
 const signupSchema = z.object({
   firstName: z.string().min(3, "Minimum character should be 3"),
@@ -11,13 +15,22 @@ const signupSchema = z.object({
 });
 
 function Signup() {
-  const {register,handleSubmit,formState: { errors },} = useForm({ resolver: zodResolver(signupSchema) });
+   
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
+
+  const {
+    register,handleSubmit,formState: { errors },} = useForm({ resolver: zodResolver(signupSchema) });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated,navigate]);
 
   const onSubmit = (data) => {
-    console.log(data);
-
-    // Backend data ko send kar dena chaiye?
-    
+    dispatch(registerUser(data));
   };
 
   return (
@@ -37,8 +50,9 @@ function Signup() {
                 className={`input input-bordered ${errors.firstName && 'input-error'}`}
                 {...register('firstName')}
               />
-              {/* && ka mtlb h ki agr pehla condition true hota hai to second cond return ho jayega AND agr pehli false then return false */}
-              {errors.firstName && (<span className="text-error">{errors.firstName.message}</span>)}
+              {errors.firstName && (
+                <span className="text-error">{errors.firstName.message}</span>
+              )}
             </div>
 
             <div className="form-control  mt-4">
