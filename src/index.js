@@ -8,6 +8,7 @@ const redisClient = require('./config/redis');
 const problemRouter = require("./routes/problemCreator");
 //const createProblem = require("../controllers/userProblem")
 const submitRouter = require("./routes/submit");
+const aiRouter = require("./routes/aiChatting");
 const cors = require('cors');
 
 app.use(cors({
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use('/user',authRouter);
 app.use('/problem',problemRouter);
 app.use('/submission', submitRouter);
+app.use('/ai', aiRouter);
 
 const InitalizeConnection = async()=>{
     try{
@@ -30,7 +32,7 @@ const InitalizeConnection = async()=>{
         console.log("DB Connected");
 
         app.listen(process.env.PORT,()=>{
-            console.log("Server listening at port number:"+process.env.PORT);
+            console.log("Server listening at port number:" + process.env.PORT);
         })
 
     }
